@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurante Delicioso</title>
+  <style>
+    /* ---- Fondo y degradados laterales ---- */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #f1c40f;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(212,175,55,0.8), rgba(0,0,0,0.3), rgba(212,175,55,0.8));
+      z-index: 0;
+    }
+    body::before { left: 0; border-right: 2px solid #d4af37; }
+    body::after { right: 0; border-left: 2px solid #d4af37; }
+
+    /* ---- Contenedor principal ---- */
+    .container {
+      background-color: #111;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 25px rgba(212, 175, 55, 0.7);
+      margin: 120px auto 60px auto;
+      max-width: 1000px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ---- Barra de navegación ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #000;
+      padding: 15px 0;
+      z-index: 1001;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #f1c40f;
+      font-weight: bold;
+      font-size: 1.2em;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #d4ac0d;
+    }
+
+    /* ---- Encabezado ---- */
+    header {
+      background-color: #000;
+      color: #f1c40f;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      margin-bottom: 40px;
+    }
+    header h1 { font-size: 3em; margin-bottom: 10px; font-weight: bold; }
+    header p { font-size: 1.2em; }
+
+    section {
+      padding: 30px 0;
+    }
+
+    .about h2, .menu h2, .order h2 {
+      font-size: 2.5em;
+      color: #f1c40f;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      background-color: #333;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .menu-item img { width: 150px; height: 100px; border-radius: 8px; object-fit: cover; }
+    .menu-item div { flex: 1; margin-left: 20px; }
+    .menu-item h3 { margin: 0; color: #f1c40f; font-size: 1.5em; font-weight: bold; }
+    .menu-item p { margin: 5px 0; font-size: 1.1em; }
+    .price { font-weight: bold; color: #f1c40f; font-size: 1.3em; }
+
+    .order-form {
+      background-color: #333;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+    }
+
+    .order-form label { font-size: 1.2em; font-weight: bold; display: block; margin-bottom: 10px; }
+    select, input[type="number"], button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      background-color: #222;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 8px;
+      font-size: 1.1em;
+    }
+    select:focus, input[type="number"]:focus { outline: none; border-color: #f1c40f; }
+    button { background-color: #f1c40f; color: black; border: none; border-radius: 8px; cursor: pointer; font-size: 1.2em; padding: 15px; margin-top: 20px; transition: 0.3s; }
+    button:hover { background-color: #d4ac0d; }
+
+    .order-summary {
+      background-color: #444;
+      color: #f1c40f;
+      padding: 25px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .order-summary h3 { font-size: 1.8em; margin-bottom: 20px; }
+    .order-summary ul { list-style: none; padding: 0; margin-bottom: 20px; }
+    .order-summary ul li { font-size: 1.2em; margin-bottom: 10px; }
+
+    footer {
+      background-color: #000;
+      color: #f1c40f;
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+
+    /* Botón "Hacer Pedido" */
+    .btn-pedido {
+      position: fixed;
+      top: 15px;
+      right: 30px;
+      padding: 12px 20px;
+      font-size: 1.1em;
+      background-color: #f1c40f;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1002;
+      transition: 0.3s;
+    }
+    .btn-pedido:hover { background-color: #d4ac0d; }
+
+  </style>
+</head>
+<body>
+  <!-- Botón "Hacer Pedido" -->
+  <button class="btn-pedido" onclick="document.getElementById('orderForm').scrollIntoView({behavior:'smooth'});">
+    Hacer Pedido
+  </button>
+
+  <!-- Barra de navegación -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="menu.html">Menú</a></li>
+      <li><a href="comentarios.html">Comentarios</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <header>
+      <h1>Restaurante Delicioso</h1>
+      <p>Disfruta de una experiencia culinaria única con un toque de elegancia.</p>
+    </header>
+
+    <section class="about">
+      <h2>Bienvenidos a Restaurante Delicioso</h2>
+      <p>Nos especializamos en ofrecer platillos exclusivos con ingredientes frescos y de calidad, preparados por nuestros chefs con amor y dedicación.</p>
+    </section>
+
+    <section class="menu">
+      <h2>Nuestros Platillos</h2>
+
+      <div class="menu-item">
+        <img src="pizza.jpg" alt="Pizza Margherita">
+        <div>
+          <h3>Pizza Margherita</h3>
+          <p>Una deliciosa pizza con salsa de tomate, queso mozzarella, albahaca fresca y aceite de oliva.</p>
+        </div>
+        <p class="price" data-price="12.99">$12.99</p>
+      </div>
+
+      <div class="menu-item">
+        <img src="lasagna.jpg" alt="Lasagna de Carne">
+        <div>
+          <h3>Lasagna de Carne</h3>
+          <p>Capas de pasta rellenas de carne molida, queso ricotta y salsa bolognesa.</p>
+        </div>
+        <p class="price" data-price="15.99">$15.99</p>
+      </div>
+
+      <div class="menu-item">
+        <img src="ensalada.jpg" alt="Ensalada César">
+        <div>
+          <h3>Ensalada César</h3>
+          <p>Lechuga romana, crutones, pollo a la parrilla y aderezo César casero.</p>
+        </div>
+        <p class="price" data-price="9.99">$9.99</p>
+      </div>
+
+      <div class="menu-item">
+        <img src="espagueti.jpg" alt="Espagueti Carbonara">
+        <div>
+          <h3>Espagueti Carbonara</h3>
+          <p>Espaguetis con salsa carbonara, panceta y queso parmesano.</p>
+        </div>
+        <p class="price" data-price="13.99">$13.99</p>
+      </div>
+
+      <div class="menu-item">
+        <img src="lemon.jpg" alt="Limonada">
+        <div>
+          <h3>Limonada</h3>
+          <p>Limonada refrescante con jugo de limón recién exprimido.</p>
+        </div>
+        <p class="price" data-price="5">$5</p>
+      </div>
+
+      <div class="menu-item">
+        <img src="coca.jpg" alt="Coca-Cola">
+        <div>
+          <h3>Coca-Cola</h3>
+          <p>Clásica Coca-Cola (Normal o Zero).</p>
+        </div>
+        <p class="price" data-price="6">$6</p>
+      </div>
+    </section>
+
+    <section class="order">
+      <h2>Haz tu Pedido</h2>
+      <form class="order-form" id="orderForm">
+        <label for="platillo">Selecciona el platillo:</label>
+        <select id="platillo" name="platillo">
+          <option value="pizza" data-price="12.99">Pizza Margherita - $12.99</option>
+          <option value="lasagna" data-price="15.99">Lasagna de Carne - $15.99</option>
+          <option value="ensalada" data-price="9.99">Ensalada César - $9.99</option>
+          <option value="espagueti" data-price="13.99">Espagueti Carbonara - $13.99</option>
+          <option value="Limonada" data-price="5">Limonada - $5</option>
+          <option value="Coca-Cola" data-price="6">Coca-Cola - $6</option>
+        </select>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" min="1" value="1" required>
+
+        <button type="button" onclick="addToOrder()">Añadir al Pedido</button>
+      </form>
+
+      <div class="order-summary">
+        <h3>Resumen del Pedido</h3>
+        <ul id="orderList"></ul>
+        <p><strong>Total: $</strong><span id="totalPrice">0.00</span></p>
+        <button onclick="window.location.href='Formulario.html'">Ir a Encuesta</button>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 Restaurante Delicioso. Todos los derechos reservados.</p>
+    </footer>
+  </div>
+
+  <script>
+    let order = {};
+    let totalPrice = 0;
+
+    function addToOrder() {
+      const platilloSelect = document.getElementById('platillo');
+      const cantidadInput = document.getElementById('cantidad');
+      const platillo = platilloSelect.value;
+      const cantidad = parseInt(cantidadInput.value);
+      const price = parseFloat(platilloSelect.selectedOptions[0].getAttribute('data-price'));
+
+      if (order[platillo]) {
+        order[platillo].cantidad += cantidad;
+      } else {
+        order[platillo] = { cantidad: cantidad, precio: price };
+      }
+
+      updateOrderSummary();
+    }
+
+    function updateOrderSummary() {
+      const orderList = document.getElementById('orderList');
+      const totalPriceElement = document.getElementById('totalPrice');
+      orderList.innerHTML = '';
+      totalPrice = 0;
+
+      for (let platillo in order) {
+        const item = order[platillo];
+        const itemTotal = item.cantidad * item.precio;
+        totalPrice += itemTotal;
+        const li = document.createElement('li');
+        li.textContent = `${platillo.charAt(0).toUpperCase() + platillo.slice(1)} x${item.cantidad} - $${itemTotal.toFixed(2)}`;
+        orderList.appendChild(li);
+      }
+
+      totalPriceElement.textContent = totalPrice.toFixed(2);
+    }
+  </script>
+</body>
+</html>
